@@ -1,0 +1,14 @@
+{
+  "google_api_key": "YOUR_GOOGLE_API_KEY",
+  "mysql": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "root",
+    "password": "password",
+    "database": "leads_db"
+  },
+  "city": "Austin, TX",
+  "areas": ["78701", "78702", "78703"],
+  "reviews_threshold": 10,
+  "per_area_limit": 100
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lead Scraper Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="header-top">
+        <h1>📊 Lead Scraper Dashboard</h1>
+        <div class="header-actions">
+          <button id="refreshBtn" title="Reload datasets and data" class="btn-primary">🔄 Refresh</button>
+        </div>
+      </div>
+      <div class="controls">
+        <label>
+          Dataset
+          <select id="fileSelect"></select>
+        </label>
+        <label>
+          Filter by Status
+          <select id="statusFilter">
+            <option value="">All</option>
+            <option value="no-website">No Website</option>
+            <option value="with-website">Has Website</option>
+          </select>
+        </label>
+        <label>
+          Filter by Area
+          <select id="areaFilter">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label>
+          Filter by Category
+          <select id="categoryFilter">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label>
+          Min Rating
+          <input id="ratingFilter" type="number" min="0" max="5" step="0.1" placeholder="0" />
+        </label>
+        <label class="search-label">
+          🔍 Search
+          <input id="searchInput" type="search" placeholder="name, phone, email..." />
+        </label>
+      </div>
+    </header>
+
+    <main>
+      <section class="kpis">
+        <div class="kpi">
+          <div class="kpi-value" id="kpiTotal">0</div>
+          <div class="kpi-label">Total Leads</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value" id="kpiQualified">0</div>
+          <div class="kpi-label">No Website</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value" id="kpiWithPhone">0</div>
+          <div class="kpi-label">With Phone</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value" id="kpiAreas">0</div>
+          <div class="kpi-label">Areas</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value" id="kpiCategories">0</div>
+          <div class="kpi-label">Categories</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value" id="kpiAvgRating">0</div>
+          <div class="kpi-label">Avg Rating</div>
+        </div>
+      </section>
+
+      <section class="charts">
+        <div class="chart-card">
+          <h3>By Category</h3>
+          <canvas id="categoryChart" height="140"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>By Area</h3>
+          <canvas id="areaChart" height="140"></canvas>
+        </div>
+      </section>
+
+      <section class="leads-section">
+        <div class="section-header">
+          <h2>📋 Qualified Leads</h2>
+          <div class="section-meta">
+            <span id="recordsInfo">Showing 0 of 0 leads</span>
+          </div>
+        </div>
+
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <label>
+              <input type="checkbox" id="selectAllToggle" />
+              <span>Select All</span>
+            </label>
+            <button id="bulkExportBtn" class="btn-secondary" disabled>📥 Export Selected</button>
+          </div>
+          <div class="toolbar-right">
+            <label>
+              Rows per page:
+              <select id="pageSizeSelect">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table id="leadsTable" class="leads-table">
+            <thead>
+              <tr>
+                <th class="col-checkbox"><input type="checkbox" id="headerCheckbox" /></th>
+                <th class="col-sortable" data-sort="business_name">Business Name <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="category">Category <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="phone">Phone <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="address">Address <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="city">City <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="area">Area <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="rating">Rating <span class="sort-icon">⇅</span></th>
+                <th class="col-sortable" data-sort="reviews_count">Reviews <span class="sort-icon">⇅</span></th>
+                <th>Website</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="pagination-section">
+          <div class="pagination">
+            <button id="prevPage" class="pag-btn" disabled>← Previous</button>
+            <div class="page-info">
+              Page <input type="number" id="pageInput" min="1" class="page-input" /> of <span id="totalPages">1</span>
+            </div>
+            <button id="nextPage" class="pag-btn" disabled>Next →</button>
+          </div>
+          <button id="exportAllBtn" class="btn-primary">📥 Export All Filtered</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Lead Scraper Dashboard • Real-time Updates Enabled</span>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

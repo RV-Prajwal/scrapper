@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Scraper Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>📊 Lead Scraper Dashboard</h1>
+          <p>Real-time lead management and analytics</p>
+        </div>
+        <div class="header-actions">
+          <button id="refreshBtn" class="btn btn-primary" title="Refresh data">
+            <span class="icon">🔄</span> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters-section">
+        <div class="filter-group">
+          <label for="searchInput">🔍 Search</label>
+          <input 
+            id="searchInput" 
+            type="text" 
+            placeholder="Name, phone, email..." 
+            class="filter-input"
+          >
+        </div>
+
+        <div class="filter-group">
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="areaFilter">Area</label>
+          <select id="areaFilter" class="filter-select">
+            <option value="">All Areas</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="websiteFilter">Website Status</label>
+          <select id="websiteFilter" class="filter-select">
+            <option value="">All</option>
+            <option value="true">Has Website</option>
+            <option value="false">No Website</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="ratingFilter">Min Rating</label>
+          <input 
+            id="ratingFilter" 
+            type="number" 
+            min="0" 
+            max="5" 
+            step="0.1" 
+            placeholder="0" 
+            class="filter-input"
+          >
+        </div>
+
+        <div class="filter-group">
+          <label for="incompleteContactFilter">Contact Info</label>
+          <select id="incompleteContactFilter" class="filter-select">
+            <option value="">All</option>
+            <option value="true">Missing Contact Info</option>
+          </select>
+        </div>
+
+        <button id="clearFiltersBtn" class="btn btn-secondary">Clear Filters</button>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+      <!-- KPI CARDS -->
+      <section class="kpi-section">
+        <div class="kpi-card">
+          <div class="kpi-icon">📋</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiTotal">0</div>
+            <div class="kpi-label">Total Leads</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📱</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiPhone">0</div>
+            <div class="kpi-label">With Phone</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">💬</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiEmail">0</div>
+            <div class="kpi-label">With Email</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🌐</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiWebsite">0</div>
+            <div class="kpi-label">Has Website</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">⭐</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiAvgRating">0</div>
+            <div class="kpi-label">Avg Rating</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📍</div>
+          <div class="kpi-content">
+            <div class="kpi-value" id="kpiAreas">0</div>
+            <div class="kpi-label">Areas</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHARTS SECTION -->
+      <section class="charts-section">
+        <div class="chart-card">
+          <h3>Distribution by Category</h3>
+          <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>Distribution by Area</h3>
+          <div class="chart-container">
+            <canvas id="areaChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABLE SECTION -->
+      <section class="table-section">
+        <div class="table-header">
+          <h2>📋 Lead Records</h2>
+          <div class="table-meta">
+            <span id="recordsInfo">Showing 0 of 0 leads</span>
+          </div>
+        </div>
+
+        <!-- TABLE TOOLBAR -->
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <label class="checkbox-label">
+              <input type="checkbox" id="selectAllToggle">
+              <span>Select All</span>
+            </label>
+            <button id="bulkExportBtn" class="btn btn-secondary" disabled>
+              📥 Export Selected
+            </button>
+          </div>
+
+          <div class="toolbar-right">
+            <label>
+              Rows per page:
+              <select id="pageSizeSelect" class="filter-select">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-responsive">
+          <table id="leadsTable" class="leads-table">
+            <thead>
+              <tr>
+                <th class="col-checkbox">
+                  <input type="checkbox" id="headerCheckbox">
+                </th>
+                <th class="sortable" data-field="business_name">Business Name</th>
+                <th class="sortable" data-field="category">Category</th>
+                <th class="sortable" data-field="phone">Phone</th>
+                <th class="sortable" data-field="address">Address</th>
+                <th class="sortable" data-field="city">City</th>
+                <th class="sortable" data-field="rating">Rating</th>
+                <th class="sortable" data-field="reviews_count">Reviews</th>
+                <th>Website</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-section">
+          <div class="pagination-controls">
+            <button id="prevPage" class="btn btn-secondary" disabled>← Previous</button>
+            <div class="page-info">
+              Page <input type="number" id="pageInput" min="1" class="page-input"> of 
+              <span id="totalPages">1</span>
+            </div>
+            <button id="nextPage" class="btn btn-secondary" disabled>Next →</button>
+          </div>
+
+          <button id="exportAllBtn" class="btn btn-primary">
+            📥 Export All Filtered
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="dashboard-footer">
+      <p>Lead Scraper Dashboard v2.0 • Real-time Updates Enabled</p>
+      <p id="connectionStatus" class="connection-status">🔴 Offline</p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
