@@ -13,6 +13,7 @@ const CONFIG = {
   areas: ['78701', '78702', '78703'],
   // North America sample locations (city-wide or ZIP/postal prefixes)
   locations: [
+    'Houston, TX', '77001, Houston, TX', '77002, Houston, TX',
     'New York, NY', '10001, New York, NY', '10002, New York, NY',
     'Los Angeles, CA', '90001, Los Angeles, CA', '90002, Los Angeles, CA',
     'Chicago, IL', '60601, Chicago, IL', '60602, Chicago, IL',
